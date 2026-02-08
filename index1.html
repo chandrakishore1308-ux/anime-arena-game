@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Anime Arena</title>
+  <meta charset="UTF-8">
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background: black;
+      font-family: Arial, sans-serif;
+    }
+
+    #menu {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle, #111, #000);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      color: white;
+      z-index: 10;
+    }
+
+    .btn {
+      padding: 15px 30px;
+      margin: 10px;
+      font-size: 20px;
+      background: #1e90ff;
+      border: none;
+      border-radius: 8px;
+      color: white;
+      cursor: pointer;
+    }
+
+    .btn:hover {
+      background: #63b3ff;
+    }
+
+    canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- MODE MENU -->
+  <div id="menu">
+    <h1>ANIME ARENA</h1>
+    <button class="btn" onclick="startDemon()">Demon Slayer</button>
+  </div>
+
+  <canvas id="renderCanvas"></canvas>
+
+  <script src="https://cdn.babylonjs.com/babylon.js"></script>
+  <script>
+    const canvas = document.getElementById("renderCanvas");
+    const engine = new BABYLON.Engine(canvas, true);
+    let scene;
+
+    function startDemon() {
+      document.getElementById("menu").style.display = "none";
+      scene = createDemonScene();
+      engine.runRenderLoop(() => scene.render());
+    }
+
+    function createDemonScene() {
+      const scene = new BABYLON.Scene(engine);
+      scene.clearColor = new BABYLON.Color3(0.05, 0.05, 0.1);
+
+      const camera = new BABYLON.ArcRotateCamera(
+        "cam",
+        Math.PI / 2,
+        Math.PI / 3,
+        14,
+        new BABYLON.Vector3(0, 1, 0),
+        scene
+      );
+      camera.attachControl(canvas, true);
+
+      new BABYLON.HemisphericLight(
+        "light",
+        new BABYLON.Vector3(0, 1, 0),
+        scene
+      );
+
+      const ground = BABYLON.MeshBuilder.CreateGround(
+        "ground",
+        { width: 20, height: 20 },
+        scene
+      );
+
+      // PLAYER (SWORDSMAN)
+      const player = BABYLON.MeshBuilder.CreateBox(
+        "player",
+        { height: 2, width: 1, depth: 1 },
+        scene
+      );
+      player.position.y = 1;
+
+      return scene;
+    }
+
+    window.addEventListener("resize", () => engine.resize());
+  </script>
+</body>
+</html>
